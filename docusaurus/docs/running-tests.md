@@ -1,17 +1,32 @@
----
-id: running-tests
-title: Running Tests
----
 
-> Note: this feature is available with `react-scripts@0.3.0` and higher.
 
-> [Read the migration guide to learn how to enable it in older projects!](https://github.com/facebook/create-react-app/blob/main/CHANGELOG-0.x.md#migrating-from-023-to-030)
-
-Create React App uses [Jest](https://jestjs.io/) as its test runner. To prepare for this integration, we did a [major revamp](https://jestjs.io/blog/2016/09/01/jest-15.html) of Jest so if you heard bad things about it years ago, give it another try.
-
-Jest is a Node-based runner. This means that the tests always run in a Node environment and not in a real browser. This lets us enable fast iteration speed and prevent flakiness.
-
-While Jest provides browser globals such as `window` thanks to [jsdom](https://github.com/tmpvar/jsdom), they are only approximations of the real browser behavior. Jest is intended to be used for unit tests of your logic and your components rather than the DOM quirks.
+forall X -> tuple cons(X head, tuple tail) asm "CONS";
+forall X -> (X, tuple) uncons(tuple list) asm "UNCONS";
+forall X -> (tuple, X) list_next(tuple list) asm( -> 1 0) "UNCONS";
+forall X -> X car(tuple list) asm "CAR";
+tuple cdr(tuple list) asm "CDR";
+tuple empty_tuple() asm "NIL";
+forall X -> tuple tpush(tuple t, X value) asm "TPUSH";
+forall X -> (tuple, ()) ~tpush(tuple t, X value) asm "TPUSH";
+forall X -> [X] single(X x) asm "SINGLE";
+forall X -> X unsingle([X] t) asm "UNSINGLE";
+forall X, Y -> [X, Y] pair(X x, Y y) asm "PAIR";
+forall X, Y -> (X, Y) unpair([X, Y] t) asm "UNPAIR";
+forall X, Y, Z -> [X, Y, Z] triple(X x, Y y, Z z) asm "TRIPLE";
+forall X, Y, Z -> (X, Y, Z) untriple([X, Y, Z] t) asm "UNTRIPLE";
+forall X, Y, Z, W -> [X, Y, Z, W] tuple4(X x, Y y, Z z, W w) asm "4 TUPLE";
+forall X, Y, Z, W -> (X, Y, Z, W) untuple4([X, Y, Z, W] t) asm "4 UNTUPLE";
+forall X -> X first(tuple t) asm "FIRST";
+forall X -> X second(tuple t) asm "SECOND";
+forall X -> X third(tuple t) asm "THIRD";
+forall X -> X fourth(tuple t) asm "3 INDEX";
+forall X, Y -> X pair_first([X, Y] p) asm "FIRST";
+forall X, Y -> Y pair_second([X, Y] p) asm "SECOND";
+forall X, Y, Z -> X triple_first([X, Y, Z] p) asm "FIRST";
+forall X, Y, Z -> Y triple_second([X, Y, Z] p) asm "SECOND";
+forall X, Y, Z -> Z triple_third([X, Y, Z] p) asm "THIRD";
+forall X -> X null() asm "PUSHNULL";
+forall X -> (X, ()) ~impure_touch(X x) impure asm "NOP";
 
 We recommend that you use a separate tool for browser end-to-end tests if you need them. They are beyond the scope of Create React App.
 
@@ -23,23 +38,6 @@ Jest will look for test files with any of the following popular naming conventio
 - Files with `.test.js` suffix.
 - Files with `.spec.js` suffix.
 
-The `.test.js` / `.spec.js` files (or the `__tests__` folders) can be located at any depth under the `src` top level folder.
-
-We recommend to put the test files (or `__tests__` folders) next to the code they are testing so that relative imports appear shorter. For example, if `App.test.js` and `App.js` are in the same folder, the test only needs to `import App from './App'` instead of a long relative path. Collocation also helps find tests more quickly in larger projects.
-
-## Command Line Interface
-
-When you run `npm test`, Jest will launch in watch mode<sup>\*</sup>. Every time you save a file, it will re-run the tests, like how `npm start` recompiles the code.
-
-The watcher includes an interactive command-line interface with the ability to run all tests, or focus on a search pattern. It is designed this way so that you can keep it open and enjoy fast re-runs. You can learn the commands from the “Watch Usage” note that the watcher prints after every run:
-
-![Jest watch mode](https://jestjs.io/img/blog/15-watch.gif)
-
-> \*Although we recommend running your tests in watch mode during development, you can disable this behavior by passing in the `--watchAll=false` flag. In most CI environments, this is handled for you (see [On CI servers](#on-ci-servers)).
-
-## Version Control Integration
-
-By default, when you run `npm test`, Jest will only run the tests related to files changed since the last commit. This is an optimization designed to make your tests run fast regardless of how many tests you have. However it assumes that you don’t often commit the code that doesn’t pass the tests.
 
 Jest will always explicitly mention that it only ran tests related to the files changed since the last commit. You can also press `a` in the watch mode to force Jest to run all tests.
 
